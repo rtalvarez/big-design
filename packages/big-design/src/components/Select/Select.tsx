@@ -21,7 +21,6 @@ interface SelectState {
 }
 
 interface Props {
-  disabled?: boolean;
   error?: React.ReactChild;
   label?: React.ReactChild;
   maxHeight?: number;
@@ -160,7 +159,7 @@ export class Select extends React.PureComponent<SelectProps, SelectState> {
   }
 
   private renderInput() {
-    const { label, placeholder, error, required, disabled } = this.props;
+    const { label, placeholder, error, required } = this.props;
 
     const highlightedItem = this.getItemById(this.state.highlightedId);
     const ariaActiveDescendant = highlightedItem ? { 'aria-activedescendant': highlightedItem.id } : {};
@@ -181,7 +180,6 @@ export class Select extends React.PureComponent<SelectProps, SelectState> {
             placeholder={placeholder}
             ref={ref}
             required={required}
-            disabled={disabled}
             value={this.state.inputText}
             {...ariaActiveDescendant}
             {...ariaControls}
