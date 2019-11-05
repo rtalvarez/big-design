@@ -1,13 +1,47 @@
-import { Form, Grid, H0, H1, Link, Select, Text } from '@bigcommerce/big-design';
+import { Button, Form, Grid, H0, H1, Link, Select, Text } from '@bigcommerce/big-design';
 import { DeleteIcon } from '@bigcommerce/big-design-icons';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Code, CodePreview } from '../../components';
 import { SelectActionPropTable, SelectOptionPropTable, SelectPropTable } from '../../PropTables';
 
+const Test = () => {
+  const [selectedOption, setSelectedOption] = useState('');
+  const input = React.useRef<HTMLInputElement>();
+  const options = [
+    {
+      value: '1',
+      content: 'uno',
+    },
+    {
+      value: '2',
+      content: 'dos',
+    },
+  ];
+
+  const ref = (forwarded: HTMLInputElement) => {
+    input.current = forwarded;
+  };
+
+  function troll() {
+    if (input && input.current) {
+      input.current.click();
+    }
+  }
+
+  return (
+    <Form.Group>
+      <Select onChange={(e: string) => setSelectedOption(e)} value={selectedOption} options={options} ref={ref} />
+      <Button onClick={troll}>Click</Button>
+    </Form.Group>
+  );
+};
+
 export default () => (
   <>
     <H0>Selects</H0>
+
+    <Test />
 
     <Text>
       Select are typeable inputs with selectable dropdown items.{' '}

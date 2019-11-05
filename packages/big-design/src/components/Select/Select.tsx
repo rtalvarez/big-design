@@ -29,7 +29,11 @@ interface Item<T> {
   ref: RefObject<HTMLLIElement>;
 }
 
-export class Select<T extends any> extends React.PureComponent<SelectProps<T>, SelectState> {
+interface PrivateProps {
+  forwardedRef: RefObject<HTMLInputElement> | React.Ref<HTMLInputElement>;
+}
+
+class Component<T extends any> extends React.PureComponent<SelectProps<T> & PrivateProps, SelectState> {
   readonly state: SelectState = {
     filterChildren: false,
     highlightedItem: null,
@@ -410,21 +414,21 @@ export class Select<T extends any> extends React.PureComponent<SelectProps<T>, S
       return this.callbackRef;
     }
 
-    const { inputRef } = this.props;
+    const { forwardedRef } = this.props;
 
-    if (inputRef && typeof inputRef === 'object') {
-      return inputRef.current;
+    if (forwardedRef && typeof forwardedRef === 'object') {
+      return forwardedRef.current;
     }
 
     return this.defaultRef.current;
   }
 
   private getInputRef() {
-    const { inputRef } = this.props;
+    const { forwardedRef } = this.props;
 
-    if (inputRef && typeof inputRef === 'object') {
-      return inputRef;
-    } else if (typeof inputRef === 'function') {
+    if (forwardedRef && typeof forwardedRef === 'object') {
+      return forwardedRef;
+    } else if (typeof forwardedRef === 'function') {
       return this.setCallbackRef;
     }
 
@@ -683,8 +687,8 @@ export class Select<T extends any> extends React.PureComponent<SelectProps<T>, S
   private setCallbackRef = (ref: HTMLInputElement) => {
     this.callbackRef = ref;
 
-    if (typeof this.props.inputRef === 'function') {
-      this.props.inputRef(ref);
+    if (typeof this.props.forwardedRef === 'function') {
+      this.props.forwardedRef(ref);
     }
   };
 
@@ -703,3 +707,12 @@ export class Select<T extends any> extends React.PureComponent<SelectProps<T>, S
     });
   };
 }
+
+// export const Select = React.forwardRef<HTMLInputElement, SelectProps<any>>(
+//   (props, ref) => <Component {...props} forwardedRef={ref} />
+// );
+export const Select = React.forwardRef<HTMLInputElement, SelectProps<unknown>>(
+  <T extends any>(props: SelectProps<T>, ref: React.Ref<HTMLInputElement>) => (
+    <Component {...props} forwardedRef={ref} />
+  ),
+);

@@ -564,7 +564,7 @@ test('should use the passed in ref object if provided', () => {
   const ref = React.createRef<HTMLInputElement>();
   const { getAllByLabelText } = render(
     <Select
-      inputRef={ref}
+      ref={ref}
       label="Countries"
       onChange={onChange}
       options={[
@@ -588,7 +588,7 @@ test('should call the provided refSetter if any', () => {
   const refSetter = (ref: HTMLInputElement) => (inputRef = ref);
   const { getAllByLabelText } = render(
     <Select
-      inputRef={refSetter}
+      ref={refSetter}
       label="Countries"
       onChange={onChange}
       options={[
