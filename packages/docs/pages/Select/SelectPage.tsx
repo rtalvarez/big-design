@@ -19,7 +19,7 @@ const Test = () => {
     },
   ];
 
-  const ref = (forwarded: HTMLInputElement) => {
+  const ref = (forwarded: any) => {
     input.current = forwarded;
   };
 

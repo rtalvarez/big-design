@@ -2,7 +2,7 @@ import React, { RefObject } from 'react';
 import { Manager, Reference } from 'react-popper';
 import scrollIntoView from 'scroll-into-view-if-needed';
 
-import { uniqueId } from '../../utils';
+import { deini, uniqueId } from '../../utils';
 import { Box } from '../Box';
 import { Flex } from '../Flex/Flex';
 import { FlexItem } from '../Flex/Item';
@@ -30,7 +30,7 @@ interface Item<T> {
 }
 
 interface PrivateProps {
-  forwardedRef: RefObject<HTMLInputElement> | React.Ref<HTMLInputElement>;
+  forwardedRef?: RefObject<HTMLInputElement> | React.Ref<HTMLInputElement>;
 }
 
 class Component<T extends any> extends React.PureComponent<SelectProps<T> & PrivateProps, SelectState> {
@@ -708,11 +708,18 @@ class Component<T extends any> extends React.PureComponent<SelectProps<T> & Priv
   };
 }
 
-// export const Select = React.forwardRef<HTMLInputElement, SelectProps<any>>(
+// export const Select2 = React.forwardRef<HTMLInputElement, SelectProps<any>>(
 //   (props, ref) => <Component {...props} forwardedRef={ref} />
 // );
-export const Select = React.forwardRef<HTMLInputElement, SelectProps<unknown>>(
-  <T extends any>(props: SelectProps<T>, ref: React.Ref<HTMLInputElement>) => (
+
+function Wrapper<T>() {
+  return React.forwardRef<HTMLInputElement, SelectProps<T>>((props, ref) => (
     <Component {...props} forwardedRef={ref} />
-  ),
-);
+  ));
+}
+
+export function Select<T>(props: SelectProps<T> & React.RefAttributes<HTMLInputElement>) {
+  const Forwarded = Wrapper<T>();
+
+  return <Forwarded {...props} />;
+}
